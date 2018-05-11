@@ -194,7 +194,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
   } else if (!enabled_) {
     // Looked through all the available commands and didn't find the "gzip" one.
     ngx_conf_log_error(
-        NGX_LOG_WARN, cf, 0, "pagespeed: cannot set gzip, command not found");
+        NGX_LOG_WARN, cf, 0, "pagespeed: cannot set gzip, command not found?");
     return;
   } else if (other_signature_mismatch) {
     return;  // Already logged error.

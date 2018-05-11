@@ -110,7 +110,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
       for (int c = 0; cf->cycle->modules[m]->commands[c].name.len; c++) {
         ngx_command_t* current_command =& cf->cycle->modules[m]->commands[c];
 
-        ngx_conf_log_error(NGX_LOG_WARN, cf, 0, current_command->name);
+        ngx_conf_log_error(NGX_LOG_WARN, cf, 0, "%s", current_command->name.data);
 
         // We look for the gzip command, and the exact signature we trust
         // this means configured as an config location offset

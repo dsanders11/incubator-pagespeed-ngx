@@ -105,10 +105,10 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
 #if (NGX_HTTP_GZIP)
   bool gzip_signature_mismatch = false;
   bool other_signature_mismatch = false;
-  for (int m = 0; ngx_modules[m] != NULL; m++) {
-    if (ngx_modules[m]->commands != NULL) {
-      for (int c = 0; ngx_modules[m]->commands[c].name.len; c++) {
-        ngx_command_t* current_command =& ngx_modules[m]->commands[c];
+  for (int m = 0; cf->cycle->modules[m] != NULL; m++) {
+    if (cf->cycle->modules[m]->commands != NULL) {
+      for (int c = 0; cf->cycle->modules[m]->commands[c].name.len; c++) {
+        ngx_command_t* current_command =& cf->cycle->modules[m]->commands[c];
 
         // We look for the gzip command, and the exact signature we trust
         // this means configured as an config location offset
@@ -121,7 +121,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
           if (IsNgxFlagCommand(current_command)) {
             current_command->set = ngx_gzip_redirect_conf_set_flag_slot;
             gzip_command_.command_ = current_command;
-            gzip_command_.module_ = ngx_modules[m];
+            gzip_command_.module_ = cf->cycle->modules[m];
             enabled_ = 1;
           } else {
             ngx_conf_log_error(
@@ -136,7 +136,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
           if (IsNgxEnumCommand(current_command)) {
             current_command->set = ngx_gzip_redirect_conf_set_enum_slot;
             gzip_http_version_command_.command_ = current_command;
-            gzip_http_version_command_.module_ = ngx_modules[m];
+            gzip_http_version_command_.module_ = cf->cycle->modules[m];
           } else {
             ngx_conf_log_error(
                 NGX_LOG_WARN, cf, 0,
@@ -150,7 +150,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
           if (IsNgxBitmaskCommand(current_command)) {
             current_command->set = ngx_gzip_redirect_conf_set_bitmask_slot;
             gzip_proxied_command_.command_ = current_command;
-            gzip_proxied_command_.module_ = ngx_modules[m];
+            gzip_proxied_command_.module_ = cf->cycle->modules[m];
           } else {
             ngx_conf_log_error(
                 NGX_LOG_WARN, cf, 0,
@@ -164,7 +164,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
           if (IsNgxHttpTypesCommand(current_command)) {
             current_command->set = ngx_gzip_redirect_http_types_slot;
             gzip_http_types_command_.command_ = current_command;
-            gzip_http_types_command_.module_ = ngx_modules[m];
+            gzip_http_types_command_.module_ = cf->cycle->modules[m];
           } else {
             ngx_conf_log_error(
                 NGX_LOG_WARN, cf, 0,
@@ -178,7 +178,7 @@ void NgxGZipSetter::Init(ngx_conf_t* cf) {
           if (IsNgxFlagCommand(current_command)) {
             current_command->set = ngx_gzip_redirect_conf_set_flag_slot;
             gzip_vary_command_.command_ = current_command;
-            gzip_vary_command_.module_ = ngx_modules[m];
+            gzip_vary_command_.module_ = cf->cycle->modules[m];
           } else {
             ngx_conf_log_error(
                 NGX_LOG_WARN, cf, 0,
